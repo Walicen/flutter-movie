@@ -55,9 +55,10 @@ class _LoginPageState extends State<LoginPage> {
     obscureText: true,
     style: styleText,
     decoration: InputDecoration(
+        fillColor: Colors.amber,
         contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         hintText: "Password",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0),)),
   );
 
    _loginButon(context) => Material(

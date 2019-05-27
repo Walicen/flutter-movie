@@ -46,16 +46,18 @@ class _FilmesPageState extends State<FilmesPage>
       controller: _tabController,
       children: <Widget>[
         Container(
-          child: _gridBuilder(context),
+          child: _gridBuilder(context, 'filme'),
         ),
-        Container(color: Colors.amber,),
+        Container(
+          child: _gridBuilder(context, 'serie'),
+        ),
         Container(color: Colors.blueGrey,)
       ],
     );
   }
 
-  _gridBuilder(context) {
-    Future<List<Filme>> film = FilmesService.getFilmes();
+  _gridBuilder(context, tipo) {
+    Future<List<Filme>> film = FilmesService.getFilmes(tipo);
 
     return FutureBuilder<List<Filme>>(
       future: film,
@@ -79,7 +81,7 @@ class _FilmesPageState extends State<FilmesPage>
       itemBuilder: (context, idx) {
         return InkWell(
           onTap: () {
-            push(context, DatailPage());
+            push(context, DatailFilmePage(filme: filmes[idx],));
           },
           child: Container(
             color: Colors.black,
