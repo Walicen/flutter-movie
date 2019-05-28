@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 class FilmesService {
 
-  static final url_image = "https://image.tmdb.org/t/p/w400/";
+  static final url_image = "https://image.tmdb.org/t/p/w500/";
 
 
   static Future<List<Filme>> getFilmes(tipo) async {

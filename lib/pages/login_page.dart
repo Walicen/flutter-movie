@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
 
   var showProgress = false;
   static var styleText = TextStyle(
-    color: Colors.green,
+    color: Colors.blueGrey,
     fontSize: 22,
   );
 
