@@ -29,6 +29,12 @@ class _FilmesPageState extends State<FilmesPage>
       appBar: AppBar(
         title: Text("Flutter Movie App"),
         centerTitle: true,
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(Icons.account_circle),
+          )
+        ],
         bottom: TabBar(
           controller: _tabController,
           tabs: <Widget>[
