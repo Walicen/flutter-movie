@@ -113,7 +113,7 @@ class _DatailFilmePageState extends State<DatailFilmePage> {
                               color: Colors.yellowAccent,
                             ),
                             Text(
-                              filme.vote_average,
+                              "${filme.vote_average}/10",
                               style: TextStyle(fontSize: 28),
                             ),
                           ],
@@ -205,16 +205,7 @@ class _DatailFilmePageState extends State<DatailFilmePage> {
     );
   }
 
-  SmoothStarRating _ratting() {
-    return SmoothStarRating(
-      allowHalfRating: false,
-      starCount: 5,
-      rating: 5,
-      size: 40.0,
-      color: Colors.yellow,
-      borderColor: Colors.yellowAccent,
-    );
-  }
+
 
   _data() {
     return filme.release_date != null
