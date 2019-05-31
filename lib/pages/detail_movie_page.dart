@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_movie/domain/filme.dart';
+import 'package:flutter_movie/service/favoritos_service.dart';
 import 'package:flutter_movie/service/filme_service.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
@@ -13,15 +14,34 @@ class DatailFilmePage extends StatefulWidget {
 }
 
 class _DatailFilmePageState extends State<DatailFilmePage> {
-  double rating = 2.5;
 
-  var favoriteColor = Colors.white;
+
+  bool _isFavorito = false;
 
   Filme get filme => widget.filme;
 
   @override
+  void initState() {
+    super.initState();
+     final service = FavoritosService();
+
+
+    service.exists(filme).then((b){
+      if(b) {
+        setState(() {
+          _isFavorito = b;
+        });
+      }
+    });
+
+
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       body: _buildBody(filme),
     );
   }
@@ -33,6 +53,7 @@ class _DatailFilmePageState extends State<DatailFilmePage> {
   _sliverlist(Filme filme) {
     String name = filme.title != null ? filme.title : filme.name;
     return CustomScrollView(
+      shrinkWrap: true,
       slivers: <Widget>[
         SliverAppBar(
           iconTheme: IconThemeData(color: Colors.white, size: 40),
@@ -43,23 +64,21 @@ class _DatailFilmePageState extends State<DatailFilmePage> {
               child: InkWell(
                 child: Icon(
                   Icons.favorite,
-                  color: favoriteColor,
+                  color: _isFavorito ? Colors.red : Colors.white,
                 ),
                 onTap: () {
-                  setState(() {
-                    favoriteColor = Colors.red;
-                  });
+                  _onClickFavorito(context, filme);
                 },
               ),
             )
           ],
-          expandedHeight: 300.0,
+          expandedHeight: 320.0,
           pinned: true,
           flexibleSpace: FlexibleSpaceBar(
             title: Text(
               name,
               style: TextStyle(
-                  backgroundColor: Colors.black12, decorationThickness: 30),
+                  backgroundColor: Colors.black12, decorationThickness: 30, ),
             ),
             titlePadding: EdgeInsets.only(left: 50, bottom: 20),
             collapseMode: CollapseMode.parallax,
@@ -68,100 +87,129 @@ class _DatailFilmePageState extends State<DatailFilmePage> {
                 fit: BoxFit.cover),
           ),
         ), //SliverFixedExtentList
-        SliverFillRemaining(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Container(
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                _divider(),
+                Container(
+                    padding: EdgeInsets.all(12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Container(
+                          child: Image.network(
+                            FilmesService.url_image + filme.poster_path,
+                            fit: BoxFit.scaleDown,
+                          ),
+                          height: 120,
+                        ),
+                        Column(
+                          children: <Widget>[
+                            Icon(
+                              Icons.star,
+                              color: Colors.yellowAccent,
+                            ),
+                            Text(
+                              "${filme.vote_average}/10",
+                              style: TextStyle(fontSize: 28),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              _data(),
+                              style: TextStyle(fontSize: 28),
+                            ),
+                            Text(
+                              "Release",
+                              style: TextStyle(
+                                  fontSize: 22, fontStyle: FontStyle.italic),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )),
+                _divider(),
+                Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(
+                      "Sinopse",
+                      style: TextStyle(
+                        fontSize: 33,
+                          fontFamily: "Ranga"
+                      ),
+                      textAlign: TextAlign.left,
+                    )),
+                Container(
                   padding: EdgeInsets.all(12),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        filme.vote_average,
-                        style: TextStyle(fontSize: 40),
-                      )
-                    ],
-                  )),
-              Divider(
-                color: Colors.white,
-              ),
-              Container(
-                padding: EdgeInsets.all(12),
-                child: Text(
-                  filme.overview,
-                  style: TextStyle(fontStyle: FontStyle.italic, fontSize: 23),
+                  child: Text(
+                    filme.overview,
+                    style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        fontSize: 23,
+                        color: Colors.white30),
+                  ),
                 ),
-              ),
-              Divider(
-                color: Colors.white,
-              ),
-            ],
+                _divider(),
+                Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Text(
+                      "Gêneros",
+                      style: TextStyle(
+                        fontSize: 33,
+                        fontFamily: "Ranga"
+                      ),
+                      textAlign: TextAlign.left,
+                    )),
+                Container(
+                  height: 200.0,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: filme.genre_ids.length,
+                    itemBuilder: (context, idx) {
+                      return Container(
+                          padding: EdgeInsets.all(8),
+                          child: Text(
+                            FilmesService.getGenre(filme.genre_ids[idx]),
+                            style: TextStyle(fontSize: 18),
+                          ));
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         )
       ],
     );
   }
 
-  /*
-  * SliverFixedExtentList(
-          itemExtent: 150,
-          delegate: SliverChildListDelegate(
-            [
-              Container(
-                color: Colors.transparent,
-                child: Text(name, style: TextStyle(color: Colors.white)),
-              ),
-              Container(
-                color: Colors.purple,
-                child:
-                    Text(filme.overview, style: TextStyle(color: Colors.white)),
-              ),
-              Container(color: Colors.green),
-              Container(color: Colors.orange),
-              Container(color: Colors.yellow),
-              Container(color: Colors.pink),
-            ],
-          ),
-        ),*/
+  Future _onClickFavorito(context, filme) async {
+    final service = FavoritosService();
+    final b = await service.favoritar(filme);
 
-  SmoothStarRating _ratting() {
-    return SmoothStarRating(
-      allowHalfRating: false,
-      starCount: 5,
-      rating: rating,
-      size: 40.0,
-      color: Colors.yellow,
-      borderColor: Colors.yellowAccent,
+    setState(() {
+      _isFavorito = b;
+    });
+  }
+
+  _divider() {
+    return Divider(
+      color: Colors.white12,
     );
   }
 
-  _imageBack(Filme filme) {
-    return Image.network(
-      FilmesService.url_image + filme.backdrop_path,
-      fit: BoxFit.fitHeight,
-    );
-  }
 
-  _myAppBar() {
-    return Container(
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              Icon(
-                Icons.settings,
-                color: Colors.white,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+
+  _data() {
+    return filme.release_date != null
+        ? filme.release_date.substring(0, 4)
+        : filme.first_air_date.substring(0, 4);
   }
 }

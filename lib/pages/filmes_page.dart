@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_movie/domain/filme.dart';
+import 'package:flutter_movie/pages/favoritos_page.dart';
 import 'package:flutter_movie/service/filme_service.dart';
 import 'package:flutter_movie/utils/nav.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_movie/pages/detail_movie_page.dart';
+
+import 'login_page.dart';
 
 class FilmesPage extends StatefulWidget {
   @override
@@ -29,6 +32,15 @@ class _FilmesPageState extends State<FilmesPage>
       appBar: AppBar(
         title: Text("Flutter Movie App"),
         centerTitle: true,
+        actions: <Widget>[
+          InkWell(
+            onTap: (){_logout(context);},
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.account_circle),
+            ),
+          )
+        ],
         bottom: TabBar(
           controller: _tabController,
           tabs: <Widget>[
@@ -51,7 +63,7 @@ class _FilmesPageState extends State<FilmesPage>
         Container(
           child: _gridBuilder(context, 'serie'),
         ),
-        Container(color: Colors.blueGrey,)
+        FavoritosPage(),
       ],
     );
   }
@@ -98,5 +110,9 @@ class _FilmesPageState extends State<FilmesPage>
       },
       staggeredTileBuilder: (int index) => new StaggeredTile.extent(2, 350),
     );
+  }
+
+  _logout(context) {
+    pushReplacement(context, LoginPage());
   }
 }

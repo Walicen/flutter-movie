@@ -1,24 +1,20 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter_movie/domain/response.dart';
-import 'package:flutter_movie/service/firebase_service.dart';
+import 'package:flutter_movie/pages/cadastro_page.dart';
 import 'package:flutter_movie/pages/filmes_page.dart';
+import 'package:flutter_movie/service/firebase_service.dart';
 import 'package:flutter_movie/utils/alert.dart';
 import 'package:flutter_movie/utils/nav.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_movie/widgets/progress.dart';
+import 'package:flutter_movie/widgets/forms.dart';
 
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
-
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final _firebaseService = FirebaseService();
-
 
   @override
   void initState() {
@@ -27,7 +23,6 @@ class _LoginPageState extends State<LoginPage> {
     // _firebaseMessaging.getToken().then((s)=>{
     //   print("Token $s")
     // });
-
   }
 
   var showProgress = false;
@@ -36,44 +31,9 @@ class _LoginPageState extends State<LoginPage> {
     fontSize: 22,
   );
 
-  final _tLogin = TextEditingController(text: "walicen.r@gmail.com");
+  final _tLogin = TextEditingController(text: "teste@gmail.com");
   final _tSenha = TextEditingController(text: "123456");
 
-   _emailField() => TextField(
-     controller: _tLogin,
-    obscureText: false,
-    style: styleText,
-    decoration: InputDecoration(
-        contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-        hintText: "E-mail",
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(32),
-        )),
-  );
-   _passField() => TextField(
-    controller: _tSenha,
-    obscureText: true,
-    style: styleText,
-    decoration: InputDecoration(
-        fillColor: Colors.amber,
-        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        hintText: "Password",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0),)),
-  );
-
-   _loginButon(context) => Material(
-    elevation: 5.0,
-    borderRadius: BorderRadius.circular(30.0),
-    color: Color(0xff01A0C7),
-    child: MaterialButton(
-      padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-      onPressed: (){_onClickLogin(context);},
-      child: Text("Login",
-          textAlign: TextAlign.center,
-          style: styleText.copyWith(
-              color: Colors.white, fontWeight: FontWeight.bold)),
-    ),
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -90,21 +50,23 @@ class _LoginPageState extends State<LoginPage> {
         child: ListView(
           shrinkWrap: true,
           children: <Widget>[
-            _emailField(),
+            emailField(_tLogin, styleText),
             _space(),
-            _passField(),
+            passField(_tSenha, styleText),
             _space(),
             Container(
-              child: showProgress ? Progress() : _loginButon(context),
+              child: showProgress ? Progress() : loginButon(context, "Login", _onClickLogin, styleText ),
             ),
             _space(),
             Container(
               height: 46,
               margin: EdgeInsets.only(top: 20),
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  push(context, CadastroPage());
+                },
                 child: Text(
-                  "Cadastre-se",
+                  "Registre-se",
                   textAlign: TextAlign.right,
                   style: TextStyle(
                     fontSize: 16,
@@ -150,5 +112,4 @@ class _LoginPageState extends State<LoginPage> {
       height: 25,
     );
   }
-
 }
