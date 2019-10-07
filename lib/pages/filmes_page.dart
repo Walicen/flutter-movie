@@ -30,7 +30,7 @@ class _FilmesPageState extends State<FilmesPage>
     return Scaffold(
       body: _buildBody(context),
       appBar: AppBar(
-        title: Text("Flutter Movie App"),
+        title: Text("Flutter Movie"),
         centerTitle: true,
         actions: <Widget>[
           InkWell(
@@ -87,6 +87,7 @@ class _FilmesPageState extends State<FilmesPage>
   }
 
   _staggeredGridView(List<Filme> filmes) {
+
     return StaggeredGridView.countBuilder(
       crossAxisCount: 4,
       itemCount: filmes.length,
@@ -98,7 +99,7 @@ class _FilmesPageState extends State<FilmesPage>
           child: Container(
             color: Colors.black,
             child: CachedNetworkImage(
-              imageUrl: FilmesService.url_image + filmes[idx].poster_path,
+              imageUrl: FilmesService.urlImage + filmes[idx].posterPath,
               placeholder: (context, url) => Center(
                     child: CircularProgressIndicator(),
                   ),

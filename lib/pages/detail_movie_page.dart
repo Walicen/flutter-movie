@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_movie/domain/filme.dart';
 import 'package:flutter_movie/service/favoritos_service.dart';
 import 'package:flutter_movie/service/filme_service.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class DatailFilmePage extends StatefulWidget {
   final Filme filme;
@@ -14,8 +14,6 @@ class DatailFilmePage extends StatefulWidget {
 }
 
 class _DatailFilmePageState extends State<DatailFilmePage> {
-
-
   bool _isFavorito = false;
 
   Filme get filme => widget.filme;
@@ -23,18 +21,15 @@ class _DatailFilmePageState extends State<DatailFilmePage> {
   @override
   void initState() {
     super.initState();
-     final service = FavoritosService();
+    final service = FavoritosService();
 
-
-    service.exists(filme).then((b){
-      if(b) {
+    service.exists(filme).then((b) {
+      if (b) {
         setState(() {
           _isFavorito = b;
         });
       }
     });
-
-
   }
 
   @override
@@ -78,12 +73,14 @@ class _DatailFilmePageState extends State<DatailFilmePage> {
             title: Text(
               name,
               style: TextStyle(
-                  backgroundColor: Colors.black12, decorationThickness: 30, ),
+                backgroundColor: Colors.black12,
+                decorationThickness: 30,
+              ),
             ),
             titlePadding: EdgeInsets.only(left: 50, bottom: 20),
             collapseMode: CollapseMode.parallax,
             background: Image.network(
-                FilmesService.url_image + filme.backdrop_path,
+                FilmesService.urlImage + filme.backdropPath,
                 fit: BoxFit.cover),
           ),
         ), //SliverFixedExtentList
@@ -101,7 +98,7 @@ class _DatailFilmePageState extends State<DatailFilmePage> {
                       children: <Widget>[
                         Container(
                           child: Image.network(
-                            FilmesService.url_image + filme.poster_path,
+                            FilmesService.urlImage + filme.posterPath,
                             fit: BoxFit.scaleDown,
                           ),
                           height: 120,
@@ -113,7 +110,7 @@ class _DatailFilmePageState extends State<DatailFilmePage> {
                               color: Colors.yellowAccent,
                             ),
                             Text(
-                              "${filme.vote_average}/10",
+                              "${filme.voteAverage}/10",
                               style: TextStyle(fontSize: 28),
                             ),
                           ],
@@ -140,10 +137,7 @@ class _DatailFilmePageState extends State<DatailFilmePage> {
                     width: MediaQuery.of(context).size.width,
                     child: Text(
                       "Sinopse",
-                      style: TextStyle(
-                        fontSize: 33,
-                          fontFamily: "Ranga"
-                      ),
+                      style: TextStyle(fontSize: 33, fontFamily: "Ranga"),
                       textAlign: TextAlign.left,
                     )),
                 Container(
@@ -161,22 +155,19 @@ class _DatailFilmePageState extends State<DatailFilmePage> {
                     width: MediaQuery.of(context).size.width,
                     child: Text(
                       "Gêneros",
-                      style: TextStyle(
-                        fontSize: 33,
-                        fontFamily: "Ranga"
-                      ),
+                      style: TextStyle(fontSize: 33, fontFamily: "Ranga"),
                       textAlign: TextAlign.left,
                     )),
                 Container(
                   height: 200.0,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: filme.genre_ids.length,
+                    itemCount: filme.genreIds.length,
                     itemBuilder: (context, idx) {
                       return Container(
                           padding: EdgeInsets.all(8),
                           child: Text(
-                            FilmesService.getGenre(filme.genre_ids[idx]),
+                            FilmesService.getGenre(filme.genreIds[idx]),
                             style: TextStyle(fontSize: 18),
                           ));
                     },
@@ -194,6 +185,13 @@ class _DatailFilmePageState extends State<DatailFilmePage> {
     final service = FavoritosService();
     final b = await service.favoritar(filme);
 
+    Fluttertoast.showToast(
+      msg: "${filme.title} foi adicionado a os favoritos!",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIos: 1,
+    );
+
     setState(() {
       _isFavorito = b;
     });
@@ -205,11 +203,9 @@ class _DatailFilmePageState extends State<DatailFilmePage> {
     );
   }
 
-
-
   _data() {
-    return filme.release_date != null
-        ? filme.release_date.substring(0, 4)
-        : filme.first_air_date.substring(0, 4);
+    return filme.releaseDate != null
+        ? filme.releaseDate.substring(0, 4)
+        : filme.firstAirDate.substring(0, 4);
   }
 }

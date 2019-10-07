@@ -77,7 +77,7 @@ class _FilmesListViewState extends State<FilmesListView> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Image.network(
-                      FilmesService.url_image+f.poster_path ??
+                      FilmesService.urlImage+f.posterPath ??
                           "http://www.livroandroid.com.br/livro/carros/esportivos/Ferrari_FF.png",
                       height: 200,
                       width: 150,
@@ -98,7 +98,7 @@ class _FilmesListViewState extends State<FilmesListView> {
                           color: Colors.white,
                         ),
                       ),
-                      _ratting(double.parse(f.vote_average)/2),
+                      _ratting(double.parse(f.voteAverage)/2),
                       ButtonTheme.bar(
                         child: ButtonBar(
                           children: <Widget>[
@@ -128,60 +128,6 @@ class _FilmesListViewState extends State<FilmesListView> {
     );
   }
 
-  Card _buildCard(Filme f, BuildContext context) {
-    return Card(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 12),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Center(
-                    child: Image.network(
-                      FilmesService.url_image+f.backdrop_path ??
-                          "http://www.livroandroid.com.br/livro/carros/esportivos/Ferrari_FF.png",
-                      height: 150,
-                    ),
-                  ),
-                  Text(
-                    f.title != null ? f.title : f.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.black,
-                    ),
-                  ),
-                  Text(
-                    f.overview,
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  ButtonTheme.bar(
-                    child: ButtonBar(
-                      children: <Widget>[
-                        FlatButton(
-                          child: const Text('DETALHES'),
-                          onPressed: () {
-                            _onClickFilme(context, f);
-                          },
-                        ),
-                        FlatButton(
-                          child: const Text('SHARE'),
-                          onPressed: () {
-                              _onClickShare(context, f);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-  }
 
   _ratting(rating) {
     return SmoothStarRating(
@@ -250,7 +196,7 @@ class _FilmesListViewState extends State<FilmesListView> {
   void _onClickShare(BuildContext context, Filme f) {
     print("Share ${f.title != null ? f.title : f.name}");
 
-    Share.share(FilmesService.url_image+f.poster_path);
+    Share.share(FilmesService.urlImage+f.posterPath);
 
   }
 }

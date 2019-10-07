@@ -4,50 +4,50 @@ class Filme {
   int id;
   String title;
   String name; //Series
-  String poster_path;
+  String posterPath;
   String overview;
-  String backdrop_path;
-  String vote_average;
-  String release_date;
-  String first_air_date;
-  List<dynamic> genre_ids;
+  String backdropPath;
+  String voteAverage;
+  String releaseDate;
+  String firstAirDate;
+  List<dynamic> genreIds;
 
   Filme(
       this.id,
       this.title,
       this.name,
-      this.poster_path,
+      this.posterPath,
       this.overview,
-      this.backdrop_path,
-      this.vote_average,
-      this.release_date,
-      this.first_air_date,
-      this.genre_ids);
+      this.backdropPath,
+      this.voteAverage,
+      this.releaseDate,
+      this.firstAirDate,
+      this.genreIds);
 
   Filme.fromJson(Map<String, dynamic> map)
       : id = map["id"],
         title = map["title"],
         name = map["name"],
-        poster_path = map["poster_path"],
+        posterPath = map["poster_path"],
         overview = map["overview"],
-        backdrop_path = map["backdrop_path"],
-        vote_average = map["vote_average"].toString(),
-        release_date = map["release_date"],
-        first_air_date = map["first_air_date"],
-        genre_ids = map["genre_ids"];
+        backdropPath = map["backdrop_path"],
+        voteAverage = map["vote_average"].toString(),
+        releaseDate = map["release_date"],
+        firstAirDate = map["first_air_date"],
+        genreIds = map["genre_ids"];
 
   toMap() {
     return {
       "id": id,
       "title": title,
       "name": name,
-      "poster_path": poster_path,
+      "poster_path": posterPath,
       "overview": overview,
-      "backdrop_path": backdrop_path,
-      "vote_average": vote_average,
-      "release_date": release_date,
-      "first_air_date": first_air_date,
-      "genre_ids": genre_ids,
+      "backdrop_path": backdropPath,
+      "vote_average": voteAverage,
+      "release_date": releaseDate,
+      "first_air_date": firstAirDate,
+      "genre_ids": genreIds,
     };
   }
 

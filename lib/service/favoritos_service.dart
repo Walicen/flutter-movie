@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_movie/domain/filme.dart';
 
 class FavoritosService {
+
   getFilmes() => _filmes.snapshots();
 
   CollectionReference get _filmes => Firestore.instance.collection("filmes");
@@ -46,6 +47,6 @@ class FavoritosService {
     var documentSnapshot = await document.get();
 
     // Verifica se o filme está favoritado
-    return await documentSnapshot.exists;
+    return documentSnapshot.exists;
   }
 }

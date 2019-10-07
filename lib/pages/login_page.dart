@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_movie/pages/cadastro_page.dart';
 import 'package:flutter_movie/pages/filmes_page.dart';
 import 'package:flutter_movie/service/firebase_service.dart';
@@ -13,27 +15,21 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final _firebaseService = FirebaseService();
 
   @override
   void initState() {
     super.initState();
-
-    // _firebaseMessaging.getToken().then((s)=>{
-    //   print("Token $s")
-    // });
   }
 
   var showProgress = false;
   static var styleText = TextStyle(
-    color: Colors.blueGrey,
+    color: Colors.white,
     fontSize: 22,
   );
 
-  final _tLogin = TextEditingController(text: "teste@gmail.com");
-  final _tSenha = TextEditingController(text: "123456");
-
+  final _tLogin = TextEditingController(text: "");
+  final _tSenha = TextEditingController(text: "");
 
   @override
   Widget build(BuildContext context) {
@@ -44,43 +40,74 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _body(context) {
-    return Container(
-      margin: EdgeInsets.all(30),
-      child: Center(
-        child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            emailField(_tLogin, styleText),
-            _space(),
-            passField(_tSenha, styleText),
-            _space(),
-            Container(
-              child: showProgress ? Progress() : loginButon(context, "Login", _onClickLogin, styleText ),
+    return Stack(
+      children: <Widget>[
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.fitHeight,
+              colorFilter: ColorFilter.mode(Colors.black54, BlendMode.darken),
+              image: AssetImage("assets/imgs/movie.jpg"),
             ),
-            _space(),
-            Container(
-              height: 46,
-              margin: EdgeInsets.only(top: 20),
-              child: InkWell(
-                onTap: () {
-                  push(context, CadastroPage());
-                },
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.all(30),
+          child: Center(
+            child: ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                emailField(_tLogin, styleText),
+                _space(),
+                passField(_tSenha, styleText),
+                _space(),
+                Container(
+                  child: showProgress
+                      ? Progress()
+                      : loginButon(context, "Entrar", _onClickLogin, styleText,
+                          Color(0xff01A0C7)),
+                ),
+                _space(),
+                Text(
+                  "OU",
+                  textAlign: TextAlign.center,
+                ),
+                _space(),
+                GoogleSignInButton(
+                    darkMode: true, onPressed: _loginGoogle, borderRadius: 12),
+                FacebookSignInButton(
+                  onPressed: () {},
+                  borderRadius: 12,
+                )
+              ],
+            ),
+          ),
+        ),
+        Container(
+          alignment: Alignment.bottomCenter,
+          padding: EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Text("Não possui conta? "),
+              InkWell(
                 child: Text(
                   "Registre-se",
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
-                  ),
+                  style: TextStyle(color: Colors.lightBlue),
                 ),
+                onTap: () {
+                  _signIn(context);
+                },
               ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        )
+      ],
     );
   }
+
+  _signIn(context) => push(context, CadastroPage());
 
   _onClickLogin(context) async {
     print("Login!");
@@ -111,5 +138,28 @@ class _LoginPageState extends State<LoginPage> {
     return SizedBox(
       height: 25,
     );
+  }
+
+  _loginGoogle() async {
+    var response = await _firebaseService.loginGoogle();
+
+    if (response.isOk()) {
+      print("Login efetuado com sucesso!");
+      pushReplacement(context, FilmesPage());
+    } else {
+      print("Something wrong!");
+      AlertDialog(
+        title: Text("Erro"),
+        content: Text("Something wrong!"),
+        actions: <Widget>[
+          FlatButton(
+            child: Text("Fechar"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    }
   }
 }

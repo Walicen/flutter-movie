@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_movie/service/firebase_service.dart';
 import 'package:flutter_movie/utils/alert.dart';
-import 'package:flutter_movie/widgets/forms.dart';
-import 'package:flutter_movie/pages/login_page.dart';
 import 'package:flutter_movie/utils/nav.dart';
+import 'package:flutter_movie/widgets/forms.dart';
 
 import 'filmes_page.dart';
 
@@ -50,7 +49,7 @@ class _CadastroPageState extends State<CadastroPage> {
                         ),
                       )
                     : loginButon(
-                        context, "Cadastrar", _onClickCadastrar, styleText),
+                        context, "Cadastrar", _onClickCadastrar, styleText, null),
                 space(),
                 cancelButton(context, "Cancelar", _onClickCancelar, styleText),
               ],
