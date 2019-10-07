@@ -12,6 +12,8 @@ This app is a listing of current movies and series.
 * firebase_auth: ^0.11.1
 
 
-![alt login](https://github.com/Walicen/flutter-movie/blob/master/assets/imgs/login.jpg)
+
+<img src="https://raw.githubusercontent.com/Walicen/flutter-movie/master/assets/imgs/login.jpeg" width="150">  <img src="https://raw.githubusercontent.com/Walicen/flutter-movie/master/assets/imgs/filme.jpeg" width="150">  <img src="https://raw.githubusercontent.com/Walicen/flutter-movie/master/assets/imgs/detalhes.jpg" width="150">   <img src="https://raw.githubusercontent.com/Walicen/flutter-movie/master/assets/imgs/favoritos.jpg" width="150">
+
 
 
