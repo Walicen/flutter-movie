@@ -6,8 +6,10 @@ import 'package:flutter_movie/pages/filmes_page.dart';
 import 'package:flutter_movie/service/firebase_service.dart';
 import 'package:flutter_movie/utils/alert.dart';
 import 'package:flutter_movie/utils/nav.dart';
+import 'package:flutter_movie/utils/prefs.dart';
 import 'package:flutter_movie/widgets/progress.dart';
 import 'package:flutter_movie/widgets/forms.dart';
+import 'package:flutter_movie/widgets/text_field.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -47,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
             image: DecorationImage(
               fit: BoxFit.fitHeight,
               colorFilter: ColorFilter.mode(Colors.black54, BlendMode.darken),
-              image: AssetImage("assets/imgs/movie.jpg"),
+              image: NetworkImage("https://source.unsplash.com/random"),
             ),
           ),
         ),
@@ -57,9 +59,10 @@ class _LoginPageState extends State<LoginPage> {
             child: ListView(
               shrinkWrap: true,
               children: <Widget>[
-                emailField(_tLogin, styleText),
+//                emailField(_tLogin, styleText),
+                AppText("Email", "Digite seu email"),
                 _space(),
-                passField(_tSenha, styleText),
+                AppText("Senha", "Digite sua senha",password: true,),
                 _space(),
                 Container(
                   child: showProgress
@@ -110,8 +113,6 @@ class _LoginPageState extends State<LoginPage> {
   _signIn(context) => push(context, CadastroPage());
 
   _onClickLogin(context) async {
-    print("Login!");
-
     setState(() {
       showProgress = true;
     });
@@ -119,11 +120,10 @@ class _LoginPageState extends State<LoginPage> {
     String login = _tLogin.text;
     String senha = _tSenha.text;
 
-//    Response response = await LoginService.login(login, senha);
-
     var response = await _firebaseService.login(login, senha);
 
     if (response.isOk()) {
+      Prefs.setString("logged", "user");
       pushReplacement(context, FilmesPage());
     } else {
       alert(context, msg: response.msg);

@@ -34,7 +34,9 @@ class _FilmesPageState extends State<FilmesPage>
         centerTitle: true,
         actions: <Widget>[
           InkWell(
-            onTap: (){_logout(context);},
+            onTap: () {
+              _logout(context);
+            },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Icon(Icons.account_circle),
@@ -87,23 +89,26 @@ class _FilmesPageState extends State<FilmesPage>
   }
 
   _staggeredGridView(List<Filme> filmes) {
-
     return StaggeredGridView.countBuilder(
       crossAxisCount: 4,
       itemCount: filmes.length,
       itemBuilder: (context, idx) {
         return InkWell(
           onTap: () {
-            push(context, DatailFilmePage(filme: filmes[idx],));
+            push(
+                context,
+                DatailFilmePage(
+                  filme: filmes[idx],
+                ));
           },
           child: Container(
             color: Colors.black,
             child: CachedNetworkImage(
               imageUrl: FilmesService.urlImage + filmes[idx].posterPath,
               placeholder: (context, url) => Center(
-                    child: CircularProgressIndicator(),
-                  ),
-              errorWidget: (context, url, error) => new Icon(Icons.error),
+                child: CircularProgressIndicator(),
+              ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
               fit: BoxFit.cover,
             ),
           ),
