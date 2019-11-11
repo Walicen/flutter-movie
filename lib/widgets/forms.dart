@@ -62,7 +62,7 @@ passField(controller, styleText) => TextField(
 
 loginButon(context, text, _onClick, styleText, backgroundColor) => Material(
       elevation: 5.0,
-      borderRadius: BorderRadius.circular(30.0),
+      borderRadius: BorderRadius.circular(22),
       color: backgroundColor != null ? backgroundColor : Color(0xff01A0C7),
       child: MaterialButton(
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),

@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
+import 'package:flutter_movie/domain/login_input.dart';
 import 'package:flutter_movie/pages/cadastro_page.dart';
 import 'package:flutter_movie/pages/filmes_page.dart';
 import 'package:flutter_movie/service/firebase_service.dart';
 import 'package:flutter_movie/utils/alert.dart';
 import 'package:flutter_movie/utils/nav.dart';
 import 'package:flutter_movie/utils/prefs.dart';
+import 'package:flutter_movie/utils/validators.dart';
 import 'package:flutter_movie/widgets/progress.dart';
 import 'package:flutter_movie/widgets/forms.dart';
 import 'package:flutter_movie/widgets/text_field.dart';
@@ -17,7 +19,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
   final _firebaseService = FirebaseService();
+  final _formKey = GlobalKey<FormState>();
+
+  final _input = LoginInput();
 
   @override
   void initState() {
@@ -29,9 +35,6 @@ class _LoginPageState extends State<LoginPage> {
     color: Colors.white,
     fontSize: 22,
   );
-
-  final _tLogin = TextEditingController(text: "");
-  final _tSenha = TextEditingController(text: "");
 
   @override
   Widget build(BuildContext context) {
@@ -53,36 +56,56 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-        Container(
-          margin: EdgeInsets.all(30),
-          child: Center(
-            child: ListView(
-              shrinkWrap: true,
-              children: <Widget>[
+        Form(
+          key: _formKey,
+          child: Container(
+            margin: EdgeInsets.all(30),
+            child: Center(
+              child: ListView(
+                shrinkWrap: true,
+                children: <Widget>[
 //                emailField(_tLogin, styleText),
-                AppText("Email", "Digite seu email"),
-                _space(),
-                AppText("Senha", "Digite sua senha",password: true,),
-                _space(),
-                Container(
-                  child: showProgress
-                      ? Progress()
-                      : loginButon(context, "Entrar", _onClickLogin, styleText,
-                          Color(0xff01A0C7)),
-                ),
-                _space(),
-                Text(
-                  "OU",
-                  textAlign: TextAlign.center,
-                ),
-                _space(),
-                GoogleSignInButton(
-                    darkMode: true, onPressed: _loginGoogle, borderRadius: 12),
-                FacebookSignInButton(
-                  onPressed: () {},
-                  borderRadius: 12,
-                )
-              ],
+                  AppText(
+                    "Email",
+                    "Digite seu email",
+                    onSaved: (value) => this._input.login = value,
+                    validator: (text) {
+                      return validateRequired(text, "Informe o email");
+                    },
+                  ),
+                  _space(),
+                  AppText(
+                    "Senha",
+                    "Digite sua senha",
+                    password: true,
+                    onSaved: (value) => this._input.senha = value,
+                    validator: (text) {
+                      return validateRequired(text, "Informe a senha");
+                    },
+                  ),
+                  _space(),
+                  Container(
+                    child: showProgress
+                        ? Progress()
+                        : loginButon(context, "Entrar", _onClickLogin,
+                            styleText, Color(0xff01A0C7)),
+                  ),
+                  _space(),
+                  Text(
+                    "OU",
+                    textAlign: TextAlign.center,
+                  ),
+                  _space(),
+                  GoogleSignInButton(
+                      darkMode: true,
+                      onPressed: _loginGoogle,
+                      borderRadius: 12),
+                  FacebookSignInButton(
+                    onPressed: () {},
+                    borderRadius: 12,
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -113,14 +136,20 @@ class _LoginPageState extends State<LoginPage> {
   _signIn(context) => push(context, CadastroPage());
 
   _onClickLogin(context) async {
+    if (!_formKey.currentState.validate()) {
+      return;
+    }
+
+    // Salva o form
+    _formKey.currentState.save();
+
+    print("Login: ${_input.login}, senha: ${_input.senha}");
+
     setState(() {
       showProgress = true;
     });
 
-    String login = _tLogin.text;
-    String senha = _tSenha.text;
-
-    var response = await _firebaseService.login(login, senha);
+    var response = await _firebaseService.login(_input.login, _input.senha);
 
     if (response.isOk()) {
       Prefs.setString("logged", "user");
